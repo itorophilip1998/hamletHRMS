@@ -3,22 +3,23 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
 class addEmployeeMail extends Mailable
 {
     use Queueable, SerializesModels;
-
+    public $data;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($data)
     {
-        //
+        $this->data=$data;
     }
 
     /**
@@ -28,6 +29,10 @@ class addEmployeeMail extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+    return $this->from('hamlethr2020@gmail.com','Hamlet')
+        ->subject('Signup Notification')
+        ->view('emails.employee')
+        ->with('data',$this->data);
     }
 }
+

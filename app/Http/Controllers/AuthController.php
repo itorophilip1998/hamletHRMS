@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Mail\signinMail;
 use App\Mail\signupMail;
+use App\Mail\signoutMail;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +23,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'username' => 'required|string|max:100',
             'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|string|min:8|max:255',
+            'password' => 'required|string|confirm|min:8|max:255',
 
         ]);
 
@@ -38,13 +40,12 @@ class AuthController extends Controller
         $user->save();
 
         $token = auth()->login($user);
-        // dd($user->email);
-        //    try{
-            Mail::to($user->email)->send(new signupMail($user));
-        //    }catch(\Exception $error)
-        //    {
-
-        //    }
+           try{
+            Mail::to($request->email)->send(new signupMail($request->all()));
+           }catch(\Exception $error)
+           {
+            //  code here..
+           }
           return $this->respondWithToken($token);
     }
 
@@ -68,6 +69,12 @@ class AuthController extends Controller
         return response()->json(['error' => 'Unauthorized'], 401);
       }
 
+      try{
+        Mail::to($request->email)->send(new signinMail($request->all()));
+       }catch(\Exception $error)
+       {
+        //  code here..
+       }
       return $this->respondWithToken($token);
     }
 
@@ -88,9 +95,8 @@ class AuthController extends Controller
         return response()->json($user, 200);
     }
 
-    public function logout() {
+    public function logout() { 
         auth()->logout();
-
         return response()->json([
             'status' => 'success',
             'message' => 'User successfully signed out'

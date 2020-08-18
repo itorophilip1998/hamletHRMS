@@ -32,12 +32,10 @@ class signupMail extends Mailable
      */
     public function build()
     {
-        $this->from('hamlethr2020@gmail.com','Hamlet')
+    return $this->from('hamlethr2020@gmail.com','Hamlet')
         ->subject('Signup Notification')
         ->view('emails.signup')
-        ->with('data', $this->data);
+        ->with('data',$this->data);
     }
 }
-
-
 

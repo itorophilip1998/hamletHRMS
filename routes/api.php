@@ -24,10 +24,10 @@ Route::group([
 ], function ($router) {
     Route::post('signup', 'AuthController@register')->name('signup');
     Route::post('login', 'AuthController@login')->name('login');
-    Route::post('logout', 'AuthController@logout');
-    Route::get('admin', 'AuthController@getAuthUser');
+    Route::post('logout', 'AuthController@logout')->name('logout');
+    Route::get('admin', 'AuthController@getAuthUser')->name('getAuthUser');
 });
- 
+
 Route::post('/company', 'CompanyController@addCompany');
 
 Route::post('/profile', 'ProfileController@addProfile');

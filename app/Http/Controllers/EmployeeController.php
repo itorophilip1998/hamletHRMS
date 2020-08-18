@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Employee;
+use App\Mail\signinMail;
 use Illuminate\Http\Request;
+use App\Mail\addEmployeeMail;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Intervention\Image\Facades\Image;
 
 class EmployeeController extends Controller
@@ -57,6 +60,12 @@ class EmployeeController extends Controller
 
 
             $employee->save();
+            try{
+                Mail::to($request->email)->send(new addEmployeeMail($request->all()));
+               }catch(\Exception $error)
+               {
+                //  code here..
+               }
             return response()->json([
                 "status" => "success",
                 "message" => "Employee Added Successfully!", $employee
