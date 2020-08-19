@@ -19,7 +19,7 @@ class ProfileController extends Controller
             'first_name'=>'required',
             'last_name'=>'required',
             'address'=>'required',
-            'profile_pic'=>'image|mimes:jpeg,png,svg|nullable',
+            'profile_pic'=>'image|mimes:jpeg,png,svg,jpg|nullable',
         ]);
 
         $id = User::where('id',Auth::user()->id)->pluck('id')->first();
@@ -29,6 +29,15 @@ class ProfileController extends Controller
         $profile->user_id = $id;
         $profile->last_name = $request->input('last_name');
         $profile->address = $request->input('address');
+
+        if($request->hasFile('profile_pic')){
+            $file = $request->file('profile_pic')->store('pictures','public');
+            $image = Image::make(public_path("storage/{$file}"));
+            $image->save();
+            $profile->profile_pic = $file;
+        }else{
+            $profile->profile_pic = null;
+        }
 
 
             $profile->save();

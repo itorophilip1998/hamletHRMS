@@ -34,7 +34,7 @@ class EmployeeController extends Controller
             'city'=>'required',
             'age'=>'required',
             'qualification'=>'required',
-            'profile_pic'=>'image|mimes:jpeg,png|nullable',
+            'profile_pic'=>'image|mimes:jpeg,png,jpg|nullable',
         ]);
 
         $id = User::where('id',Auth::user()->id)->pluck('id')->first();

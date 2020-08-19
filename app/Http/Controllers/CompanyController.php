@@ -26,7 +26,7 @@ class CompanyController extends Controller
             'state'=>'required',
             'zip_code'=>'required',
             'company_website'=>'required',
-            'company_logo'=>'image|size:1024|mimes:jpeg,png,svg|nullable',
+            'company_logo'=>'image|size:1024|mimes:jpeg,png,svg,jpg|nullable',
             'services'=>'required',
         ]);
 
@@ -45,6 +45,14 @@ class CompanyController extends Controller
         $company->company_logo = $request->input('company_logo');
         $company->services = $request->input('services');
 
+        if($request->hasFile('company_logo')){
+            $file = $request->file('company_logo')->store('pictures','public');
+            $image = Image::make(public_path("storage/{$file}"));
+            $image->save();
+            $company->company_logo = $file;
+        }else{
+            $company->company_logo = null;
+        }
 
             $company->save();
             return response()->json([
